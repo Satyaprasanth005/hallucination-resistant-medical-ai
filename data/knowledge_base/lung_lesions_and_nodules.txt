@@ -6,3 +6,4 @@ Benign radiographic indicators include smooth, sharply circumscribed margins, pr
 Suspicious features associated with primary bronchogenic carcinoma or metastatic pulmonary disease include irregular, lobulated, or spiculated ('corona radiata') borders, upper lobe anatomic predilection, rapid volume doubling time (between 20 and 400 days), presence of ground-glass or part-solid subsolid attenuation, and cavitary lesions featuring thick, irregular, or nodular internal cavity walls (> 15 mm).
 
 Non-neoplastic causes of solitary or multiple pulmonary nodules encompass infectious granulomas (tuberculosis, histoplasmosis, coccidioidomycosis), pulmonary arteriovenous malformations, rounded atelectasis, rheumatoid nodules, and organizing post-infectious inflammatory infiltrates.
+

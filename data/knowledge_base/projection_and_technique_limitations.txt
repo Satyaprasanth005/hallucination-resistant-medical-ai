@@ -6,3 +6,4 @@ Inspiratory adequacy significantly modulates radiographic appearance. A high-qua
 Patient rotation alters thoracic symmetry and may falsely simulate unilateral pulmonary opacification or tracheal deviation. Rotation is assessed by measuring the horizontal distance between the medial ends of the clavicles and the central line of thoracic vertebral spinous processes. Unequal distances signify rotation toward the side with the shorter gap.
 
 Penetration technique dictates diagnostic utility. On an appropriately penetrated radiograph, the thoracic vertebral bodies and disc spaces should be faintly perceptible behind the cardiac silhouette. Underpenetrated images obscure retrocardiac disease and basilar lung markings, whereas overpenetrated images wash out subtle ground-glass infiltrates and small non-calcified nodules.
+

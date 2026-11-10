@@ -14,3 +14,4 @@ The Silhouette Sign provides precise lobar localization:
 - Loss of the superior mediastinal or aortic knob contour indicates upper lobe involvement.
 
 Complications of pneumonia to inspect vigilantly include parapneumonic effusion, empyema, lung abscess formation (characterized by an air-fluid level within a thick cavitary wall), and necrotizing pneumonia with pneumatocele development.
+

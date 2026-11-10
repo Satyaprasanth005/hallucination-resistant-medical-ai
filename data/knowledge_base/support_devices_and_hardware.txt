@@ -8,3 +8,4 @@ Central Venous Catheters (CVC) and PICC Lines: Catheters inserted via internal j
 Enteric and Nasogastric (NG) Feeding Tubes: The tube should descend in the midline along the esophagus, bisect the carina, cross below the left hemidiaphragm, and terminate with the side ports and distal tip positioned comfortably within the stomach bubble. Visualization of the tube coursing into the right bronchus or pleural cavity mandates immediate clinical intervention before any enteral infusion.
 
 Chest Drainage Tubes: Must be verified to have all fenestrations (side holes) positioned inside the pleural space, visualized by the disruption in the radiopaque marker stripe. Apical placement is preferred for pneumothorax evacuation; basilar posterior placement is standard for draining pleural effusions or hemothoraces.
+

@@ -99,6 +99,9 @@ class ExperimentRunner:
         if test_df is None or test_df.empty:
             raise ValueError("test_df cannot be empty for experiment evaluation")
 
+        if sample_limit and len(test_df) > sample_limit:
+            test_df = test_df.head(sample_limit).copy()
+
         logger.info(f"Running controlled evaluation matrix on {len(test_df)} test samples...")
 
         # Core controlled configurations
@@ -122,6 +125,8 @@ class ExperimentRunner:
         ]
 
         summary_rows = []
+        per_sample_rows = []
+        all_stored_verifications = []
 
         for exp_name, flags in exp_configs:
             logger.info(f"Executing: {exp_name}...")
@@ -134,6 +139,7 @@ class ExperimentRunner:
 
             for _, row in test_df.iterrows():
                 img_path = row["image_path"]
+                img_id = str(row.get("image_id", Path(img_path).name))
                 ref_text = str(row.get("findings", "") or row.get("impression", "") or "Normal chest.")
 
                 try:
@@ -203,6 +209,22 @@ class ExperimentRunner:
                     v_res = self.uncertainty.evaluate_uncertainty(v_res)
                 all_verification_results.extend(v_res)
 
+                # Record per-sample statistics
+                per_sample_rows.append({
+                    "experiment": exp_name,
+                    "image_id": img_id,
+                    "bleu_2": round(b_res["BLEU-2"], 4),
+                    "rouge_l": round(r_res["ROUGE-L"], 4),
+                    "clinical_f1": round(c_res["Clinical_Label_F1"], 4),
+                    "num_claims": len(claims),
+                    "num_supported": sum(1 for r in v_res if r.status == "SUPPORTED"),
+                    "num_contradicted": sum(1 for r in v_res if r.status == "CONTRADICTED"),
+                    "num_unsupported": sum(1 for r in v_res if r.status == "UNSUPPORTED"),
+                    "num_uncertain": sum(1 for r in v_res if r.status == "UNCERTAIN"),
+                })
+
+            all_stored_verifications.extend([r.to_dict() for r in all_verification_results])
+
             # Aggregate hallucination metrics
             h_metrics = compute_hallucination_metrics(
                 all_verification_results,
@@ -220,18 +242,48 @@ class ExperimentRunner:
                 "Verification_AUROC": h_metrics["Hallucination_AUROC"],
             })
 
+        self.last_per_sample_results = per_sample_rows
+        self.last_verification_results = all_stored_verifications
+
         df_results = pd.DataFrame(summary_rows)
         return df_results
 
-    def save_results(self, results_df: pd.DataFrame) -> None:
-        """Saves experiment summary table to CSV and JSON."""
-        metrics_dir = self.cfg.output_dir / "metrics"
+    def save_results(self, results_df: pd.DataFrame, output_dir: Optional[Path] = None) -> Dict[str, Path]:
+        """Saves experiment summary table to CSV, JSON, and Excel across research directories."""
+        base_out = output_dir or self.cfg.output_dir
+        metrics_dir = base_out / "metrics"
+        research_dir = base_out / "research_results"
         metrics_dir.mkdir(parents=True, exist_ok=True)
+        research_dir.mkdir(parents=True, exist_ok=True)
 
-        csv_path = metrics_dir / "experiments_summary.csv"
-        json_path = metrics_dir / "experiments_summary.json"
+        saved = {}
+        for target_dir in [metrics_dir, research_dir]:
+            csv_path = target_dir / "evaluation_results.csv"
+            json_path = target_dir / "evaluation_results.json"
+            results_df.to_csv(csv_path, index=False)
+            results_df.to_json(json_path, orient="records", indent=2)
+            saved[f"{target_dir.name}_csv"] = csv_path
+            saved[f"{target_dir.name}_json"] = json_path
+            try:
+                xlsx_path = target_dir / "evaluation_results.xlsx"
+                results_df.to_excel(xlsx_path, index=False)
+                saved[f"{target_dir.name}_xlsx"] = xlsx_path
+            except Exception:
+                pass
 
-        results_df.to_csv(csv_path, index=False)
-        results_df.to_json(json_path, orient="records", indent=2)
+        # Legacy aliases for backwards compatibility
+        results_df.to_csv(metrics_dir / "experiments_summary.csv", index=False)
+        results_df.to_json(metrics_dir / "experiments_summary.json", orient="records", indent=2)
 
-        logger.info(f"Saved evaluation metrics to {csv_path} and {json_path}")
+        if hasattr(self, "last_per_sample_results") and self.last_per_sample_results:
+            sample_df = pd.DataFrame(self.last_per_sample_results)
+            sample_df.to_csv(research_dir / "per_sample_results.csv", index=False)
+            saved["per_sample"] = research_dir / "per_sample_results.csv"
+
+        if hasattr(self, "last_verification_results") and self.last_verification_results:
+            with open(research_dir / "claim_verification_results.json", "w", encoding="utf-8") as f:
+                json.dump(self.last_verification_results, f, indent=2)
+            saved["claims_json"] = research_dir / "claim_verification_results.json"
+
+        logger.info(f"Saved evaluation metrics to {metrics_dir} and {research_dir}")
+        return saved
