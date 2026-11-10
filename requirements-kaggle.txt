@@ -1,0 +1,11 @@
+# Lightweight incremental dependencies for Kaggle environment
+# Most packages (PyTorch, torchvision, transformers, sklearn, pandas, etc.) are pre-installed on Kaggle
+torchxrayvision>=1.2.0
+faiss-cpu>=1.7.4
+pymupdf>=1.23.0
+rouge-score>=0.1.2
+bert-score>=0.3.13
+pydicom>=2.4.0
+gradio>=4.12.0
+sentence-transformers>=2.2.0
+

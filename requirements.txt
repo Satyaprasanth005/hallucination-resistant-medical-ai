@@ -1,0 +1,47 @@
+# Core PyTorch and Computer Vision
+torch>=2.0.0
+torchvision>=0.15.0
+torchaudio>=2.0.0
+timm>=0.9.0
+torchxrayvision>=1.2.0
+
+# Hugging Face Transformers & NLP
+transformers>=4.36.0
+tokenizers>=0.15.0
+accelerate>=0.25.0
+sentence-transformers>=2.2.0
+
+# Information Retrieval & Vector Store
+faiss-cpu>=1.7.4
+pymupdf>=1.23.0
+langchain>=0.1.0
+langchain-community>=0.0.10
+
+# Scientific, Tabular & Medical Image Processing
+numpy>=1.24.0
+scipy>=1.10.0
+pandas>=2.0.0
+scikit-learn>=1.3.0
+pillow>=9.5.0
+pydicom>=2.4.0
+opencv-python-headless>=4.8.0
+
+# Evaluation Metrics
+nltk>=3.8.0
+rouge-score>=0.1.2
+bert-score>=0.3.13
+
+# Visualization & App
+matplotlib>=3.7.0
+seaborn>=0.12.0
+plotly>=5.17.0
+gradio>=4.12.0
+
+# Utilities & Configuration
+pyyaml>=6.0
+pydantic>=2.0
+tqdm>=4.65.0
+rich>=13.5.0
+pytest>=7.4.0
+psutil>=5.9.0
+

@@ -1,0 +1,70 @@
+dataset:
+  # Search roots for dataset discovery in priority order
+  search_roots:
+    kaggle:
+      - "/kaggle/input"
+      - "/kaggle/input/datasets/masrursabab/iu-chest-x-rays-cleaned"
+      - "/kaggle/input/iu-chest-x-rays-cleaned"
+      - "/kaggle/input/iu-xray"
+      - "/kaggle/input/open-i"
+      - "/kaggle/input/mimic-cxr-jpg"
+      - "/kaggle/input/chexpert-v10-small"
+    local:
+      - "./data"
+      - "../data"
+      - "data/sample"
+
+  # Standardized metadata column mapping
+  standard_columns:
+    image_id: "image_id"
+    image_path: "image_path"
+    patient_id: "patient_id"
+    findings: "findings"
+    impression: "impression"
+    labels: "labels"
+    image_view: "image_view"
+
+  # Patient-level splitting parameters (Strictly by patient_id)
+  splits:
+    train_ratio: 0.70
+    val_ratio: 0.10
+    test_ratio: 0.20
+    random_seed: 42
+    stratify_by_primary_abnormality: true
+
+  # Primary clinical abnormality classes
+  abnormality_classes:
+    - "Cardiomegaly"
+    - "Pleural Effusion"
+    - "Pneumothorax"
+    - "Consolidation"
+    - "Atelectasis"
+    - "Edema"
+    - "Lung Opacity"
+    - "Enlarged Cardiomediastinum"
+    - "Lung Lesion"
+    - "No Finding"
+
+  # Image preprocessing specifications
+  preprocessing:
+    image_size: [224, 224]
+    color_mode: "RGB" # or L for grayscale single channel
+    normalize_mean: [0.485, 0.456, 0.406]
+    normalize_std: [0.229, 0.224, 0.225]
+    apply_clahe: false
+    quality_check:
+      min_resolution: [128, 128]
+      max_aspect_ratio: 2.5
+      min_contrast_std: 10.0
+
+  # Cleaned IU X-Ray dataset configuration
+  cleaned_csv:
+    csv_path: "/kaggle/input/datasets/masrursabab/iu-chest-x-rays-cleaned/cleaned_dataset.csv"
+    image_dir: "/kaggle/input/datasets/masrursabab/iu-chest-x-rays-cleaned/resized_images/256"
+    columns:
+      image_id: "image_id"
+      projection: "projection"
+      caption: "org_caption"
+    study_id_pattern: "CXR\\d+"
+
+

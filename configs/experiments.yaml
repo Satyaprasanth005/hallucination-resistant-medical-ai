@@ -1,0 +1,67 @@
+experiments:
+  output_root: "outputs"
+  results_csv: "outputs/metrics/experiments_summary.csv"
+  results_json: "outputs/metrics/experiments_summary.json"
+
+  # Evaluation Metrics Settings
+  metrics:
+    nlp:
+      - "BLEU-1"
+      - "BLEU-2"
+      - "BLEU-4"
+      - "ROUGE-1"
+      - "ROUGE-2"
+      - "ROUGE-L"
+      - "BERTScore"
+    clinical:
+      - "Clinical_Label_Precision"
+      - "Clinical_Label_Recall"
+      - "Clinical_Label_F1"
+      - "Finding_Agreement_Accuracy"
+    hallucination:
+      - "Unsupported_Claim_Rate"
+      - "Contradiction_Rate"
+      - "Supported_Claim_Retention"
+      - "Verification_AUROC"
+      - "Verification_F1"
+    uncertainty:
+      - "Expected_Calibration_Error"
+      - "Brier_Score"
+      - "Selective_Risk"
+      - "Coverage"
+
+  # Controlled Experiment Matrix
+  experiment_suite:
+    exp1_baseline:
+      name: "Exp 1 - Baseline Vision-to-Report"
+      description: "Direct generation from visual findings without RAG or verification"
+      use_vision: true
+      use_rag: false
+      use_claim_verification: false
+      use_uncertainty_abstention: false
+
+    exp2_rag:
+      name: "Exp 2 - RAG Enhanced Generation"
+      description: "Vision encoder + Medical knowledge retrieval + Report generation"
+      use_vision: true
+      use_rag: true
+      use_claim_verification: false
+      use_uncertainty_abstention: false
+
+    exp3_verification:
+      name: "Exp 3 - Independent Hallucination Verification"
+      description: "Vision + RAG + Report Gen + Post-generation Independent Claim Verification"
+      use_vision: true
+      use_rag: true
+      use_claim_verification: true
+      use_uncertainty_abstention: false
+
+    exp4_uncertainty_aware:
+      name: "Exp 4 - Uncertainty-Aware Verification with Selective Abstention"
+      description: "Full Pipeline: Vision + RAG + Generation + Verification + Calibrated Abstention"
+      use_vision: true
+      use_rag: true
+      use_claim_verification: true
+      use_uncertainty_abstention: true
+      abstention_threshold: 0.40 # Threshold for flagging or withholding uncertain statements
+

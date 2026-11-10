@@ -1,0 +1,64 @@
+model:
+  # Primary Medical Vision Encoder
+  vision_encoder:
+    backbone: "vit_base_patch16_224" # HuggingFace or timm
+    hf_model_id: "google/vit-base-patch16-224"
+    torchxrayvision_weights: "densenet121-res224-all"
+    feature_dim: 768
+    pretrained: true
+    use_torchxrayvision_fallback: true
+    torchxrayvision_supported_labels:
+      - "Cardiomegaly"
+      - "Effusion"
+      - "Pneumothorax"
+      - "Consolidation"
+      - "Atelectasis"
+      - "Edema"
+      - "Lung Opacity"
+      - "Enlarged Cardiomediastinum"
+      - "Lung Lesion"
+      - "Pleural Other"
+
+  # Independent Verification Classifier (Strictly separate from generation model)
+  independent_verifier:
+    model_type: "torchxrayvision_densenet" # Independent model checkpoint
+    model_weights: "densenet121-res224-chex"
+    decision_thresholds:
+      supported_threshold: 0.60
+      contradiction_threshold: 0.20
+      uncertain_range: [0.20, 0.60]
+    calibrate_probabilities: true
+
+  # Medical RAG Knowledge Retrieval Module
+  rag:
+    embedding_model: "sentence-transformers/all-MiniLM-L6-v2"
+    device: "auto"
+    chunk_size: 256
+    chunk_overlap: 32
+    top_k: 3
+    similarity_threshold: 0.45
+    faiss_index_path: "outputs/faiss_index/radiology_reference.index"
+    knowledge_dir: "data/knowledge_base"
+
+  # Generative AI Report Generator
+  generation:
+    model_type: "flan-t5-base" # or lightweight seq2seq / causal model
+    hf_model_id: "google/flan-t5-base"
+    max_input_length: 512
+    max_output_length: 256
+    temperature: 0.3 # Low temperature for medical factual consistency
+    num_beams: 3
+    repetition_penalty: 1.2
+    do_sample: false
+
+  # Hardware and Execution Optimization
+  hardware:
+    device: "auto" # auto detects cuda:0, p100, t4, or falls back to cpu
+    use_fp16: true
+    gradient_accumulation_steps: 2
+    batch_size: 16
+    eval_batch_size: 32
+    num_workers: 2
+    output_dir_override: "/kaggle/working/medical_ai_outputs"
+
+
