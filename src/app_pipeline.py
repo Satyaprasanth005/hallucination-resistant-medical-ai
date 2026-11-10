@@ -19,8 +19,9 @@ from src.vision.vision_encoder import MedicalVisionEncoder
 from src.vision.abnormality_classifier import AbnormalityClassifier
 from src.rag.rag_pipeline import MedicalRAGPipeline
 from src.generation.report_generator import MedicalReportGenerator
+from src.generation.structured_report import StructuredRadiologyReport
 from src.verification.claim_extractor import MedicalClaimExtractor
-from src.verification.verifier import IndependentHallucinationVerifier
+from src.verification.verifier import IndependentHallucinationVerifier, synthesize_verified_text
 from src.verification.uncertainty import UncertaintyEstimator
 from src.utils.logger import get_logger
 
@@ -98,11 +99,38 @@ class EndToEndMedicalAIPipeline:
         claims = self.extractor.extract_claims(report.findings)
 
         # 8. Independent Claim Verification
-        verification_results = self.verifier.verify_claims(claims, independent_probs)
+        verification_results = self.verifier.verify_claims(
+            claims,
+            independent_probs,
+            image_quality_usable=quality_info.get("is_usable", True),
+        )
 
         # 9. Calibrated Uncertainty Estimation
         if apply_uncertainty:
             verification_results = self.uncertainty.evaluate_uncertainty(verification_results)
+
+        # 10. Synthesize Verified Report (Evidence Grounded)
+        verified_findings = synthesize_verified_text(
+            report.findings,
+            verification_results,
+            filter_uncertain=apply_uncertainty,
+        )
+        verified_impression = synthesize_verified_text(
+            report.impression,
+            verification_results,
+            filter_uncertain=apply_uncertainty,
+        )
+        verified_report = StructuredRadiologyReport(
+            examination=report.examination,
+            image_view=report.image_view,
+            image_quality=report.image_quality,
+            findings=verified_findings,
+            impression=verified_impression,
+            uncertainty_statements=[r.claim for r in verification_results if r.status == "UNCERTAIN"],
+            evidence_references=[r.to_dict() for r in verification_results if r.status == "SUPPORTED"],
+            raw_visual_findings=visual_probs,
+            generation_mode="verified_multimodal",
+        )
 
         runtime = time.time() - start_time
 
@@ -113,6 +141,7 @@ class EndToEndMedicalAIPipeline:
             "independent_visual_probabilities": independent_probs,
             "retrieved_context": retrieved_context,
             "generated_report": report,
+            "verified_report": verified_report,
             "extracted_claims": [c.to_dict() for c in claims],
             "verification_results": verification_results,
             "runtime_seconds": runtime,

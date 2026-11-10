@@ -3,7 +3,7 @@ Uncertainty Estimation, Model Disagreement, and Selective Abstention.
 Implements Expected Calibration Error (ECE), Brier Score, and calibrated abstention logic.
 """
 
-from typing import List, Dict, Any, Tuple
+from typing import List, Dict, Any, Tuple, Optional
 import numpy as np
 from src.config import ProjectConfig, get_config
 from src.verification.verifier import VerificationResult
@@ -16,18 +16,37 @@ class UncertaintyEstimator:
         self.cfg = config or get_config()
         self.abstention_threshold = abstention_threshold
 
-    def evaluate_uncertainty(self, verification_results: List[VerificationResult]) -> List[VerificationResult]:
-        """Applies uncertainty assessment and updates status if within abstention zone."""
+    def evaluate_uncertainty(
+        self,
+        verification_results: List[VerificationResult],
+        abstention_threshold: Optional[float] = None,
+    ) -> List[VerificationResult]:
+        """Applies uncertainty assessment and calibrated selective prediction.
+        
+        Abstains on ambiguous or borderline claims where epistemic uncertainty is high,
+        preserving clear SUPPORTED and CONTRADICTED claims.
+        """
+        threshold = abstention_threshold if abstention_threshold is not None else self.abstention_threshold
         updated = []
         for res in verification_results:
-            conf = res.confidence if res.confidence is not None else 0.50
-            # Normalized epistemic uncertainty is high when confidence is close to 0.50
-            uncertainty_score = 1.0 - 2.0 * abs(conf - 0.50)
+            if res.status in ("CONTRADICTED", "NOT_VERIFIABLE"):
+                updated.append(res)
+                continue
 
-            if uncertainty_score >= self.abstention_threshold and res.status != "CONTRADICTED":
-                # Mark as UNCERTAIN / ABSTAINED from definitive clinical claim
+            conf = res.confidence if res.confidence is not None else 0.50
+            # Normalized epistemic uncertainty: 1.0 at 0.50, 0.0 at 0.0 or 1.0
+            uncertainty_score = max(0.0, 1.0 - 2.0 * abs(conf - 0.50))
+
+            # Calibrated abstention: abstain on borderline/ambiguous claims
+            should_abstain = False
+            if res.status == "UNSUPPORTED" and uncertainty_score >= threshold:
+                should_abstain = True
+            elif res.status == "SUPPORTED" and conf < 0.60:
+                should_abstain = True
+
+            if should_abstain:
                 res.status = "UNCERTAIN"
-                res.explanation += f" [High Uncertainty: {uncertainty_score:.2f} -> Calibrated Abstention Applied]"
+                res.explanation += f" [High Epistemic Uncertainty ({uncertainty_score:.2f}) -> Calibrated Abstention Applied]"
 
             updated.append(res)
         return updated

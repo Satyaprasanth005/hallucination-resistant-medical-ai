@@ -1,0 +1,8 @@
+RADIOLOGICAL EVALUATION OF PULMONARY LESIONS AND NODULES:
+A solitary pulmonary nodule (SPN) is defined as a discrete, round or oval parenchymal opacity measuring less than or equal to 3.0 cm in maximum diameter, completely surrounded by aerated lung tissue, without associated atelectasis, hilar enlargement, or pleural effusion. Any focal parenchymal lesion exceeding 3.0 cm is designated as a pulmonary mass and carries an elevated pretest probability of malignancy until proven otherwise.
+
+Benign radiographic indicators include smooth, sharply circumscribed margins, presence of specific benign calcification patterns (central, laminated, diffuse, or 'popcorn' calcification characteristic of pulmonary hamartoma), and documented radiographic stability with unchanged dimensions for greater than 24 months on prior imaging studies.
+
+Suspicious features associated with primary bronchogenic carcinoma or metastatic pulmonary disease include irregular, lobulated, or spiculated ('corona radiata') borders, upper lobe anatomic predilection, rapid volume doubling time (between 20 and 400 days), presence of ground-glass or part-solid subsolid attenuation, and cavitary lesions featuring thick, irregular, or nodular internal cavity walls (> 15 mm).
+
+Non-neoplastic causes of solitary or multiple pulmonary nodules encompass infectious granulomas (tuberculosis, histoplasmosis, coccidioidomycosis), pulmonary arteriovenous malformations, rounded atelectasis, rheumatoid nodules, and organizing post-infectious inflammatory infiltrates.

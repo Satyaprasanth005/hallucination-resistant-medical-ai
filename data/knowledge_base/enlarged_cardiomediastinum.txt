@@ -1,0 +1,8 @@
+RADIOLOGICAL CRITERIA FOR ENLARGED CARDIOMEDIASTINUM AND MEDIASTINAL MASSES:
+An enlarged cardiomediastinum is defined radiographically when the mediastinal contour extends beyond normal vascular boundaries. On standard upright PA chest radiographs, superior mediastinal width exceeding 6 to 8 cm, or a mediastinal-to-thoracic ratio exceeding 0.25 to 0.30, indicates true anatomical enlargement rather than radiographic artifact.
+
+The mediastinum is anatomically subdivided into anterior, middle, and posterior compartments. Anterior mediastinal widening classically raises differential possibilities of the '4 Ts': Thymoma, Teratoma / germ cell tumor, Thyroid substernal goiter, and Terrible lymphoma. The hilum overlay sign helps distinguish anterior mediastinal masses from primary cardiomegaly or hilar vascular dilatation.
+
+Middle mediastinal enlargement commonly results from mediastinal lymphadenopathy (tuberculosis, sarcoidosis, metastatic carcinoma), tracheal diverticula, or bronchogenic cysts. Posterior mediastinal masses typically represent neurogenic tumors (schwannomas, neurofibromas) or descending thoracic aortic aneurysms with paraspinal soft tissue fullness.
+
+Vascular causes of mediastinal widening constitute medical emergencies, most notably thoracic aortic dissection and ruptured aortic aneurysm. Key radiographic indicators of acute aortic pathology include progressive widening of the superior mediastinum, apical pleural capping, deviation of the trachea or nasogastric tube to the right, and loss of the aortic knob contour.

@@ -34,7 +34,7 @@ def get_pipeline():
 def analyze_chest_xray(input_image, image_view, enable_rag, enable_uncertainty):
     """Processes uploaded chest X-ray and returns multimodal diagnostic card."""
     if input_image is None:
-        return None, "Please upload a chest X-ray image.", "", None, None, None
+        return "<p style='color:red;'>Please upload a chest X-ray image.</p>", "Please upload a chest X-ray image.", None, None, None
 
     pipe = get_pipeline()
     result = pipe.run(

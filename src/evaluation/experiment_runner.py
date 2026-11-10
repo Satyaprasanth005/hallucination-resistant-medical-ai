@@ -21,7 +21,7 @@ from src.vision.abnormality_classifier import AbnormalityClassifier
 from src.rag.rag_pipeline import MedicalRAGPipeline
 from src.generation.report_generator import MedicalReportGenerator
 from src.verification.claim_extractor import MedicalClaimExtractor
-from src.verification.verifier import IndependentHallucinationVerifier, VerificationResult
+from src.verification.verifier import IndependentHallucinationVerifier, VerificationResult, synthesize_verified_text
 from src.verification.uncertainty import UncertaintyEstimator
 from src.evaluation.text_metrics import compute_bleu, compute_rouge
 from src.evaluation.clinical_metrics import compute_clinical_factuality_metrics
@@ -88,9 +88,16 @@ class ExperimentRunner:
         test_df: Optional[pd.DataFrame] = None,
         sample_limit: Optional[int] = 20,
     ) -> pd.DataFrame:
-        """Runs controlled experiments comparing rule-based baseline vs LLM vs LLM+Verification."""
+        """Runs controlled experiments comparing rule-based baseline vs LLM vs LLM+Verification.
+
+        All output reports are audited using the same independent verification classifier to ensure
+        strictly fair, un-skewed comparisons across configurations.
+        """
         if test_df is None:
             test_df = self.load_evaluation_data(sample_limit=sample_limit)
+
+        if test_df is None or test_df.empty:
+            raise ValueError("test_df cannot be empty for experiment evaluation")
 
         logger.info(f"Running controlled evaluation matrix on {len(test_df)} test samples...")
 
@@ -123,6 +130,7 @@ class ExperimentRunner:
             rouge_l_scores = []
             clinical_f1_scores = []
             all_verification_results = []
+            total_ref_supported = 0
 
             for _, row in test_df.iterrows():
                 img_path = row["image_path"]
@@ -132,7 +140,6 @@ class ExperimentRunner:
                     tensor = self.preprocessor(img_path).unsqueeze(0)
                     txv_tensor = self.preprocessor.process_for_torchxrayvision(img_path)
                 except Exception:
-                    # Deterministic neutral representation if image missing
                     tensor = torch.zeros(1, 3, 224, 224)
                     txv_tensor = torch.zeros(1, 1, 224, 224)
 
@@ -140,6 +147,11 @@ class ExperimentRunner:
                 visual_probs = self.classifier.predict(tensor)[0]
                 # Independent model visual probabilities
                 independent_probs = self.independent_classifier.predict(txv_tensor)[0]
+
+                # Tally reference supported claims for genuine retention metric
+                ref_claims = self.extractor.extract_claims(ref_text)
+                ref_v_res = self.verifier.verify_claims(ref_claims, independent_probs)
+                total_ref_supported += sum(1 for r in ref_v_res if r.status == "SUPPORTED")
 
                 # RAG context
                 if flags["use_rag"]:
@@ -159,7 +171,21 @@ class ExperimentRunner:
                 else:
                     report = self.generator.generate_report(gen_input, include_rag=flags["use_rag"])
 
-                cand_text = report.findings
+                raw_cand_text = report.findings
+
+                # If verification/uncertainty filtering is active, synthesize verified report
+                if flags["use_verify"]:
+                    raw_claims = self.extractor.extract_claims(raw_cand_text)
+                    raw_v_res = self.verifier.verify_claims(raw_claims, independent_probs)
+                    if flags["use_uncertainty"]:
+                        raw_v_res = self.uncertainty.evaluate_uncertainty(raw_v_res)
+                    cand_text = synthesize_verified_text(
+                        raw_cand_text,
+                        raw_v_res,
+                        filter_uncertain=flags["use_uncertainty"],
+                    )
+                else:
+                    cand_text = raw_cand_text
 
                 # Text & Clinical metrics against reference
                 b_res = compute_bleu(ref_text, cand_text)
@@ -170,29 +196,18 @@ class ExperimentRunner:
                 rouge_l_scores.append(r_res["ROUGE-L"])
                 clinical_f1_scores.append(c_res["Clinical_Label_F1"])
 
-                # Claim extraction & verification
+                # Audit published report through the independent verifier
                 claims = self.extractor.extract_claims(cand_text)
-
-                if flags["use_verify"]:
-                    v_res = self.verifier.verify_claims(claims, independent_probs)
-                    if flags["use_uncertainty"]:
-                        v_res = self.uncertainty.evaluate_uncertainty(v_res)
-                    all_verification_results.extend(v_res)
-                else:
-                    for c in claims:
-                        all_verification_results.append(VerificationResult(
-                            claim_id=c.claim_id,
-                            claim=c.original_text,
-                            status="SUPPORTED" if c.polarity == "POSITIVE" else "UNSUPPORTED",
-                            visual_evidence=[],
-                            medical_consistency=True,
-                            confidence=0.70,
-                            explanation="Unverified assertion.",
-                            verification_method="none",
-                        ))
+                v_res = self.verifier.verify_claims(claims, independent_probs)
+                if flags["use_uncertainty"]:
+                    v_res = self.uncertainty.evaluate_uncertainty(v_res)
+                all_verification_results.extend(v_res)
 
             # Aggregate hallucination metrics
-            h_metrics = compute_hallucination_metrics(all_verification_results)
+            h_metrics = compute_hallucination_metrics(
+                all_verification_results,
+                reference_supported_total=total_ref_supported if total_ref_supported > 0 else None,
+            )
 
             summary_rows.append({
                 "Experiment": exp_name,

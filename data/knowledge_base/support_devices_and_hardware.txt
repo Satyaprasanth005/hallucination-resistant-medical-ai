@@ -1,0 +1,10 @@
+ASSESSMENT AND LOCALIZATION OF SUPPORT DEVICES AND TUBES ON CHEST RADIOGRAPHS:
+Evaluation of support lines, tubes, and surgical hardware is a vital component of emergency and ICU chest radiograph interpretation. Every visible extraneous device must be identified, traced continuously along its path, and evaluated for proper terminal position and related acute complications.
+
+Endotracheal Tube (ETT): In adult patients with the cervical spine in neutral flexion, the distal tip of the endotracheal tube should lie approximately 3.0 to 5.0 cm above the tracheal carina, or at the level of the T2 to T4 thoracic vertebral bodies. Neck flexion can advance the tube tip up to 2 cm inferiorly toward the right mainstem bronchus, risking right main bronchus intubation and left lung collapse; neck extension draws the tube superiorly, predisposing to vocal cord injury or inadvertent extubation.
+
+Central Venous Catheters (CVC) and PICC Lines: Catheters inserted via internal jugular, subclavian, or peripheral veins should terminate at the cavoatrial junction, situated in the lower third of the superior vena cava (SVC), roughly corresponding to the level of the right tracheobronchial angle or T5-T6 vertebral interspace. More distal placement inside the right atrium risks cardiac arrhythmias and perforation, whereas high proximal placement increases thrombotic risk.
+
+Enteric and Nasogastric (NG) Feeding Tubes: The tube should descend in the midline along the esophagus, bisect the carina, cross below the left hemidiaphragm, and terminate with the side ports and distal tip positioned comfortably within the stomach bubble. Visualization of the tube coursing into the right bronchus or pleural cavity mandates immediate clinical intervention before any enteral infusion.
+
+Chest Drainage Tubes: Must be verified to have all fenestrations (side holes) positioned inside the pleural space, visualized by the disruption in the radiopaque marker stripe. Apical placement is preferred for pneumothorax evacuation; basilar posterior placement is standard for draining pleural effusions or hemothoraces.

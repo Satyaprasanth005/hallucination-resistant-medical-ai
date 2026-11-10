@@ -43,9 +43,13 @@ class MedicalRAGPipeline:
         self.index_file = self.cfg.output_dir / "faiss_index" / "radiology_reference.index"
         self.build_or_load_index()
 
-    def build_or_load_index(self, chunks: Optional[List[Dict[str, Any]]] = None) -> None:
+    def build_or_load_index(
+        self,
+        chunks: Optional[List[Dict[str, Any]]] = None,
+        force_rebuild: bool = False,
+    ) -> None:
         """Loads persistent index from disk if present; otherwise ingests documents and builds."""
-        if self.index_file.exists():
+        if not force_rebuild and self.index_file.exists():
             success = self.vector_store.load(self.index_file)
             if success and self.vector_store.total_vectors > 0:
                 logger.info(f"Loaded existing FAISS index with {self.vector_store.total_vectors} vectors from {self.index_file}")

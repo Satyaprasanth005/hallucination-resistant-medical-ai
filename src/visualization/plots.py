@@ -94,15 +94,15 @@ def plot_model_predictions(predictions: Dict[str, float], thresholds: Optional[D
 
 def plot_claim_verification_summary(verification_results: List[Any]) -> plt.Figure:
     """Visualizes distribution of claim verification statuses."""
-    status_counts = {"SUPPORTED": 0, "UNSUPPORTED": 0, "UNCERTAIN": 0, "CONTRADICTED": 0}
+    status_counts = {"SUPPORTED": 0, "UNSUPPORTED": 0, "UNCERTAIN": 0, "CONTRADICTED": 0, "NOT_VERIFIABLE": 0}
     for r in verification_results:
         s = getattr(r, "status", "UNCERTAIN")
         status_counts[s] = status_counts.get(s, 0) + 1
 
-    fig, ax = plt.subplots(figsize=(7, 5))
+    fig, ax = plt.subplots(figsize=(8, 5))
     labels = list(status_counts.keys())
     counts = list(status_counts.values())
-    colors = ["#2ca02c", "#ff7f0e", "#7f7f7f", "#d62728"]
+    colors = ["#2ca02c", "#ff7f0e", "#7f7f7f", "#d62728", "#9467bd"]
 
     bars = ax.bar(labels, counts, color=colors, edgecolor="black", alpha=0.85)
     ax.set_ylabel("Count of Verified Claims", fontsize=11, fontweight="bold")

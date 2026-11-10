@@ -17,6 +17,7 @@ def render_verified_report_summary(pipeline_result: Dict[str, Any]) -> str:
         "UNSUPPORTED": "[UNSUPPORTED - WEAK EVIDENCE]",
         "CONTRADICTED": "[CONTRADICTED - MODEL CONFLICT]",
         "UNCERTAIN": "[UNCERTAIN - AMBIGUOUS / ABSTAINED]",
+        "NOT_VERIFIABLE": "[NOT VERIFIABLE - OUT OF VOCABULARY]",
     }
 
     lines = [
@@ -67,6 +68,7 @@ def generate_html_report_card(pipeline_result: Dict[str, Any]) -> str:
         "UNSUPPORTED": "background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba;",
         "CONTRADICTED": "background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb;",
         "UNCERTAIN": "background-color: #e2e3e5; color: #383d41; border: 1px solid #d6d8db;",
+        "NOT_VERIFIABLE": "background-color: #f0f0f0; color: #495057; border: 1px dashed #ced4da;",
     }
 
     html = [

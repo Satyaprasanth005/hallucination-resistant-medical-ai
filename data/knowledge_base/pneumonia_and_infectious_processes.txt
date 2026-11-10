@@ -1,0 +1,16 @@
+RADIOLOGICAL MANIFESTATIONS OF PNEUMONIA AND INFECTIOUS PROCESSES:
+Pneumonia manifests on chest radiographs primarily through alveolar airspace filling, visible as homogeneous or patchy pulmonary opacifications and consolidations. Pathognomonic signs include air bronchograms—tubular lucencies representing patent air-filled bronchial trees surrounded by fluid-filled, opacified alveoli—which definitively localize the disease process to the pulmonary parenchyma rather than the pleural space.
+
+The anatomic distribution aids in identifying the infectious etiology:
+1. Lobar pneumonia typically produces dense, contiguous opacification sharply bounded by visceral interlobar fissures (classic Streptococcus pneumoniae).
+2. Bronchopneumonia manifests as multifocal, patchy, non-segmental opacities centered around terminal bronchioles, often seen with Staphylococcus aureus or Gram-negative bacilli.
+3. Interstitial / atypical pneumonia (Mycoplasma, viral infections) presents with bilateral reticular or reticulonodular interstitial markings and peribronchial cuffing, typically disproportionately prominent relative to physical auscultation findings.
+
+The Silhouette Sign provides precise lobar localization:
+- Loss of the right heart border indicates right middle lobe (medial segment) consolidation.
+- Loss of the left heart border indicates lingular segment (left upper lobe) involvement.
+- Loss of the right hemidiaphragmatic contour indicates right lower lobe consolidation.
+- Loss of the descending thoracic aortic stripe indicates left lower lobe consolidation.
+- Loss of the superior mediastinal or aortic knob contour indicates upper lobe involvement.
+
+Complications of pneumonia to inspect vigilantly include parapneumonic effusion, empyema, lung abscess formation (characterized by an air-fluid level within a thick cavitary wall), and necrotizing pneumonia with pneumatocele development.

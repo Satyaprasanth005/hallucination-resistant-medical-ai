@@ -25,6 +25,7 @@ class TestArtifactsAndPipeline(unittest.TestCase):
 
         self.assertIn("visual_findings", result)
         self.assertIn("generated_report", result)
+        self.assertIn("verified_report", result)
         self.assertIn("extracted_claims", result)
         self.assertIn("verification_results", result)
         self.assertGreater(result["runtime_seconds"], 0.0)
