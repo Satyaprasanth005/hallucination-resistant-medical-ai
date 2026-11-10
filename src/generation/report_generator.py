@@ -153,13 +153,13 @@ class MedicalReportGenerator:
     def _parse_report_sections(self, text: str, high_conf: Dict[str, float]) -> tuple:
         """Parses generated text into findings and impression sections."""
         text = text.strip()
-        # Clean any leading 'FINDINGS:' if repeated
-        text = re.sub(r'^(?i)\bfindings?\s*[:\.\-]\s*', '', text).strip()
+        # Clean any leading 'FINDINGS:' if repeated (use flags=re.IGNORECASE to avoid Python 3.11+ regex global flag position error)
+        text = re.sub(r'^\bfindings?\s*[:\.\-]\s*', '', text, flags=re.IGNORECASE).strip()
 
         findings = text
         impression = ""
 
-        impression_match = re.search(r'(?i)\bimpressions?\s*[:\.\-]\s*', text)
+        impression_match = re.search(r'\bimpressions?\s*[:\.\-]\s*', text, flags=re.IGNORECASE)
         if impression_match:
             findings = text[:impression_match.start()].strip()
             impression = text[impression_match.end():].strip()

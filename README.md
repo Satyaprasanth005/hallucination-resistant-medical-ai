@@ -225,21 +225,53 @@ hallucination_medical_ai/
 
 ## 6. Kaggle Environment Execution Guide
 
-### 6.1 Kaggle Setup Instructions
-1. **Upload Code:** In Kaggle, click **New Notebook** -> File -> Upload Notebook, or upload the `hallucination_medical_ai` folder into `/kaggle/working/hallucination_medical_ai`.
-2. **Attach Accelerator:**
-   - In the notebook settings on the right panel, select **Accelerator: GPU T4 x2** or **GPU P100**.
-3. **Attach Datasets:**
-   - Click **Add Input** in the top right.
-   - Search and attach:
-     - `Indiana University Chest X-rays` (for IU X-Ray / Open-I)
-     - `MIMIC-CXR-JPG` (if approved) or `CheXpert-v1.0-small`.
-   - The dataset discovery module (`src/datasets/discovery.py`) will automatically scan `/kaggle/input/` and index the metadata.
-4. **Internet Access:**
-   - Enable Internet in settings for first run to fetch weights, or attach weights via Kaggle Input.
+### 6.1 Master Research Notebook (Recommended)
+The entire research workflow has been consolidated into one master, Kaggle-friendly Jupyter Notebook located at the repository root:
 
-### 6.2 Notebook Execution Order
-Execute the notebooks in sequence from 01 through 08:
+👉 **[`Hallucination_Resistant_Medical_Report_Generation.ipynb`](Hallucination_Resistant_Medical_Report_Generation.ipynb)**
+
+This self-contained notebook runs top-to-bottom across 12 standardized research sections:
+1. **Section 1**: Project Introduction & Academic Abstract
+2. **Section 2**: Kaggle Environment Setup & Dependency Configuration
+3. **Section 3**: Dataset Loading & Leakage-Free Study-Level Partitioning (`CXR\d+`)
+4. **Section 4**: Image Preprocessing Pipeline & Exploratory Analysis
+5. **Section 5**: Medical Vision Encoder Architecture & Weight Verification
+6. **Section 6**: Chest Radiograph Abnormality Classification (10 Classes)
+7. **Section 7**: Medical RAG (Retrieval-Augmented Generation) Knowledge Pipeline
+8. **Section 8**: Generative AI Report Generation (FLAN-T5)
+9. **Section 9**: Atomic Claim Extraction & Independent Verification
+10. **Section 10**: Complete End-to-End Pipeline Demonstration on Benchmark Scan
+11. **Section 11**: Controlled Research Evaluation Matrix (Baseline A vs Model B vs Model C)
+12. **Section 12**: Final Research Results, Error Analysis & Discussion
+
+---
+
+### 6.2 Kaggle Execution Steps
+1. **Create Notebook**: On Kaggle, create a new notebook or upload [`Hallucination_Resistant_Medical_Report_Generation.ipynb`](Hallucination_Resistant_Medical_Report_Generation.ipynb).
+2. **Configure Accelerator**: Select **GPU T4 x2** (or GPU P100) in the right-hand settings panel.
+3. **Attach Dataset**:
+   - In the right-hand panel, click **Add Input**.
+   - Search and attach: `iu-chest-x-rays-cleaned` (by masrursabab).
+   - Verify path: `/kaggle/input/datasets/masrursabab/iu-chest-x-rays-cleaned/cleaned_dataset.csv`.
+4. **Enable Internet**: Ensure internet access is enabled to permit downloading pretrained transformer weights (FLAN-T5, SentenceTransformers).
+5. **Output Path**: All artifacts, generated reports, FAISS indexes, and comparative CSV/JSON metrics are automatically saved under:
+   ```
+   /kaggle/working/medical_ai_outputs/
+   ├── checkpoints/
+   ├── faiss_index/
+   ├── metrics/
+   │   └── experiments_summary.csv
+   ├── plots/
+   │   └── comparative_research_results.png
+   └── reports/
+       └── verified_report_<timestamp>.json
+   ```
+
+---
+
+### 6.3 Modular Notebooks (Alternative Step-by-Step Exploration)
+For modular exploration, individual notebooks remain available in `notebooks/`:
+
 1. `01_environment_and_dataset_setup.ipynb`: Verifies GPU, discovers attached datasets, builds patient-level splits.
 2. `02_image_preprocessing_and_eda.ipynb`: Audits image quality and class distributions.
 3. `03_medical_vision_model.ipynb`: Tests Vision Transformer feature embeddings and abnormality classification.
@@ -304,7 +336,8 @@ The codebase includes an extensive automated unit test suite covering environmen
 ```bash
 python -m pytest tests/
 ```
-All **33 unit tests pass** deterministically.
+All **35 unit and integration tests pass** deterministically.
+
 
 ---
 

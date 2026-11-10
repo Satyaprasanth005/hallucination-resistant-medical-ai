@@ -68,6 +68,19 @@ class TestReportGeneration(unittest.TestCase):
         self.assertIn("Cardiomegaly", report.impression)
         self.assertGreater(len(report.uncertainty_statements), 0)
 
+    def test_parse_report_sections_regex_regression(self):
+        """Verifies section parsing regex handles leading markers without regex global flag errors."""
+        text_with_prefix = "FINDINGS: Clear lungs. IMPRESSION: Normal chest."
+        findings, impression = self.generator._parse_report_sections(text_with_prefix, {})
+        self.assertEqual(findings, "Clear lungs.")
+        self.assertEqual(impression, "Normal chest.")
+
+        text_case_variation = "findings - Heart is enlarged. Impression: Cardiomegaly."
+        findings2, impression2 = self.generator._parse_report_sections(text_case_variation, {"Cardiomegaly": 0.8})
+        self.assertEqual(findings2, "Heart is enlarged.")
+        self.assertEqual(impression2, "Cardiomegaly.")
+
+
 
 if __name__ == "__main__":
     unittest.main()
